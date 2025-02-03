@@ -1,0 +1,33 @@
+﻿@model ProductCatalog.Models.Entities.Product
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+<div class="container ">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="contact-form">
+                <h2 class="mb-4">Add Product</h2>
+                <form asp-action="Create" method="post">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input asp-for="Name" type="text" class="form-control" id="name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Price</label>
+                        <input asp-for="Price" type="text" class="form-control" id="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Image URL</label>
+                        <input asp-for="ProductImageURL" type="text" id="image" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Description</label>
+                        <textarea asp-for="Description" class="form-control" id="message" rows="5"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button asp-action="Index" class="btn btn-danger">Go Back</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,68 +1,73 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ProductCatalog.Models;
 using ProductCatalog.Models.Entities;
 
 namespace ProductCatalog.Controllers
 {
     public class ProductController : Controller
     {
-        public static List<Product> ProductList { get; set; } = new List<Product>()
+        private readonly ApplicationDbContext _context;
+        public ProductController(ApplicationDbContext context)
         {
-            new Product
-            {
-                Id = 1,
-                Name = "IPhone",
-                Description = "New Phone",
-                Price = 1999m,
-                ProductImageURL = "https://www.apple.com/newsroom/images/2024/09/apple-debuts-iphone-16-pro-and-iphone-16-pro-max/article/Apple-iPhone-16-Pro-hero-240909_inline.jpg.large.jpg"
-            },
-            new Product
-            {
-                Id = 2,
-                Name = "MacBook Pro",
-                Description = "High-performance laptop for professionals",
-                Price = 2499m,
-                ProductImageURL = "https://plus.unsplash.com/premium_photo-1681666713728-9ed75e148617?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            },
-            new Product
-            {
-                Id = 3,
-                Name = "Samsung Galaxy S23 Ultra",
-                Description = "Latest flagship smartphone with advanced features",
-                Price = 1299m,
-                ProductImageURL = "https://images.unsplash.com/photo-1678958274412-563119ec18ab?q=80&w=1335&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            },
-            new Product
-            {
-                Id = 4,
-                Name = "Sony WH-1000XM5",
-                Description = "Noise-canceling wireless headphones",
-                Price = 349m,
-                ProductImageURL = "https://images.unsplash.com/photo-1577174881658-0f30ed549adc?q=80&w=1320&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            },
-            new Product
-            {
-                Id = 5,
-                Name = "Apple Watch Series 9",
-                Description = "Smartwatch with health and fitness tracking",
-                Price = 399m,
-                ProductImageURL = "https://images.unsplash.com/photo-1705307543536-06ebcb39bb0c?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            }
-
-        };
-        public IActionResult Index()
-        {
-            return View(ProductList);
+            _context = context;
         }
 
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Index()
         {
-            // var product = ProductList[id];
-            var product = ProductList.FirstOrDefault(x => x.Id == id);
+            var products = await _context.Products.OrderBy(x => - x.Id).ToListAsync();
+            return View(products);
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
 
             if (product == null)
                 return NotFound();
 
             return View(product);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Product product)
+        {
+            await _context.Products.AddAsync(product);
+
+            await _context.SaveChangesAsync();
+
+            //return View();
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
+            return View(product);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(Product request, int id)
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == request.Id);
+
+            product.Name = request.Name;
+            product.Description = request.Description;
+            product.Price = request.Price;
+            product.ProductImageURL = request.ProductImageURL;
+
+            _context.Products.Update(product);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
         }
     }
 }
