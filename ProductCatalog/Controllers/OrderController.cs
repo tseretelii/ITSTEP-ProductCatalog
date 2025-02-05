@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProductCatalog.Models;
+using ProductCatalog.Models.Entities;
 
 namespace ProductCatalog.Controllers
 {
@@ -11,10 +13,10 @@ namespace ProductCatalog.Controllers
         {
             _context = context;
         }
-
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var orders = await _context.Order.Include(x => x.Products).ToListAsync();
+            return View(orders);
         }
     }
 }
