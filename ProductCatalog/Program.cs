@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProductCatalog.Models;
+using System.Text.Json.Serialization;
 
 namespace ProductCatalog
 {
@@ -10,7 +11,7 @@ namespace ProductCatalog
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
