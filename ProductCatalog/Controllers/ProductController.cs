@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProductCatalog.Interfaces;
 using ProductCatalog.Models;
 using ProductCatalog.Models.Entities;
 
@@ -7,26 +8,20 @@ namespace ProductCatalog.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        public ProductController(ApplicationDbContext context)
+        private readonly IProductService _productService;
+        public ProductController(IProductService service)
         {
-            _context = context;
+            _productService = service;
         }
 
         public async Task<IActionResult> Index()
         {
-            var products = await _context.Products.OrderBy(x => - x.Id).ToListAsync();
-            return View(products);
+            return View( await _productService.Index() );
         }
 
         public async Task<IActionResult> Details(int id)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
-
-            if (product == null)
-                return NotFound();
-
-            return View(product);
+            return View( await _productService.Details(id) );
         }
 
         [HttpGet]
@@ -38,35 +33,20 @@ namespace ProductCatalog.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Product product)
         {
-            await _context.Products.AddAsync(product);
-
-            await _context.SaveChangesAsync();
-
-            //return View();
+            await _productService.Create(product);
             return RedirectToAction("Index");
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
-            return View(product);
+            return View(await _productService.Edit(id));
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(Product request, int id)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == request.Id);
-
-            product.Name = request.Name;
-            product.Description = request.Description;
-            product.Price = request.Price;
-            product.ProductImageURL = request.ProductImageURL;
-
-            _context.Products.Update(product);
-
-            await _context.SaveChangesAsync();
-
+            await _productService.Edit(request, id);
             return RedirectToAction("Index");
         }
     }

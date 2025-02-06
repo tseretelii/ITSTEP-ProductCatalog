@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using ProductCatalog.Interfaces;
 using ProductCatalog.Models;
+using ProductCatalog.Services;
 
 namespace ProductCatalog
 {
@@ -15,6 +17,10 @@ namespace ProductCatalog
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+
+
+            builder.Services.AddScoped<IProductService, ProductService>();
+
 
             var app = builder.Build();
 
