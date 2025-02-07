@@ -13,7 +13,13 @@ namespace ProductCatalog.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            return View( await _orderService.Index());
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            return View(await _orderService.Index());
         }
 
         [HttpPost]
