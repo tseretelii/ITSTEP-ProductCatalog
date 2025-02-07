@@ -1,0 +1,20 @@
+﻿@model List<ProductCatalog.Models.Entities.Product>
+
+<h2>Create an Order</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label>Select Products:</label>
+        @foreach (var product in Model)
+        {
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="ProductIds" value="@product.Id" />
+                    @product.Name - @String.Format("{0:C}", product.Price)
+                </label>
+            </div>
+        }
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Order</button>
+</form>

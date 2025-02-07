@@ -20,7 +20,7 @@ namespace ProductCatalog
 
 
             builder.Services.AddScoped<IProductService, ProductService>();
-
+            builder.Services.AddScoped<IOrderService, OrderService>();
 
             var app = builder.Build();
 
