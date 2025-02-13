@@ -13,7 +13,7 @@ namespace ProductCatalog.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            return View();
+            return View(await _orderService.Index());
         }
 
         [HttpGet]
@@ -23,9 +23,9 @@ namespace ProductCatalog.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(List<Product> products)
+        public async Task<IActionResult> Create(List<int> productIds)
         {
-            await _orderService.Create(products);
+            await _orderService.Create(productIds);
             return RedirectToAction("Index");
         }
     }
