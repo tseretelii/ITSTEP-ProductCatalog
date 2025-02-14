@@ -1,0 +1,37 @@
+﻿Here Are Orders
+
+@model List<ProductCatalog.Models.Entities.Order>
+
+@{
+    ViewData["Title"] = "Order List";
+}
+
+<h2>Order List</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Products</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.Id</td>
+                <td>
+                    @foreach (var product in order.Products)
+                    {
+                        <p>@product.Name - @product.Price</p>
+                    }
+                </td>
+                <td>
+                    <button asp-action="Edit" class="btn btn-warning">Edit</button>
+                    <button asp-action="Delete" class="btn btn-danger">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
