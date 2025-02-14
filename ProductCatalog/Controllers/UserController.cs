@@ -27,5 +27,28 @@ namespace ProductCatalog.Controllers
             return RedirectToAction("Index", "Home");
             //return redirect
         }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(UserLoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _userService.Login(model);
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<IActionResult> LogOut()
+        {
+            await _userService.LogOut();
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

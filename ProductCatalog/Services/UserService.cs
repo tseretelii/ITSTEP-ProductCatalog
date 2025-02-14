@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using ProductCatalog.Interfaces;
 using ProductCatalog.Models;
 using ProductCatalog.Models.Entities;
@@ -17,27 +18,30 @@ namespace ProductCatalog.Services
             _userManager = userManager;
             _signInManager = signInManager;
         }
-        public Task Login(UserLoginViewModel model)
+        public async Task Login(UserLoginViewModel model)
         {
-            throw new NotImplementedException();
+            var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password,isPersistent:false,lockoutOnFailure:false);
+
         }
 
-        public Task LogOut()
+        public async Task LogOut()
         {
-            throw new NotImplementedException();
+            await _signInManager.SignOutAsync();
         }
 
-        public async Task Regsiter(UserRegisterViewModel model)
+        public async Task<IdentityResult> Regsiter(UserRegisterViewModel model)
         {
             User user = new User()
             {
+                UserName = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                Email = model.Email,
-                PasswordHash = model.Password,
+                Email = model.Email
             };
 
-            await _context.Users.AddAsync(user);
+            var result = await _userManager.CreateAsync(user, model.Password);
+            //Console.WriteLine(result.ToString());
+            return result;
             //throw new NotImplementedException();
         }
     }
