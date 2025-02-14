@@ -27,9 +27,18 @@ namespace ProductCatalog.Services
             throw new NotImplementedException();
         }
 
-        public Task Regsiter(UserRegisterViewModel model)
+        public async Task Regsiter(UserRegisterViewModel model)
         {
-            throw new NotImplementedException();
+            User user = new User()
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                PasswordHash = model.Password,
+            };
+
+            await _context.Users.AddAsync(user);
+            //throw new NotImplementedException();
         }
     }
 }
