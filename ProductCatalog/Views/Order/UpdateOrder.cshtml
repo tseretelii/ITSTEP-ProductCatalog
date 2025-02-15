@@ -1,0 +1,20 @@
+﻿@model ProductCatalog.Models.VM.OrderViewModel
+
+<h2>Create an Order</h2>
+
+<form asp-action="UpdateOrder" method="post">
+    <div class="form-group">
+        <label>Select Products:</label>
+        @foreach (var product in ViewBag.Products)
+        {
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="productIds" value="@product.Id" />
+                    @product.Name - @String.Format("{0:C}", product.Price)
+                </label>
+            </div>
+        }
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update Order</button>
+</form>

@@ -2,7 +2,6 @@
 {
     public class OrderViewModel
     {
-        public List<int>? ProductIds { get; set; }
-        public bool IsPaid { get; set; }
+        public List<int>? ProductIds { get; set; } = new List<int>();
     }
 }

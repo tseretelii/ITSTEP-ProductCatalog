@@ -1,0 +1,40 @@
+﻿@model List<ProductCatalog.Models.Entities.Order>
+
+@{
+    ViewData["Title"] = "Orders Index";
+}
+
+<h2>Orders Index</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Number of Products</th>
+            <th>Is Paid?</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.Id</td>
+                <td>
+                    @foreach (var product in order.Products)
+                    {
+                        <p>@product.Name - $@product.Price</p>
+                        <br/>
+                    }
+                </td>
+                <td>@(order.IsPaid ? "Yes" : "No")</td>
+                <td><a asp-controller="Order" asp-action="UpdateOrder" asp-route-id="@order.Id" class="btn btn-primary">Edit</a></td>
+                @if (!order.IsPaid)
+                {
+                    <td><a asp-action="Pay" asp-route-id="@order.Id" class="btn btn-success">Pay</a></td>
+                }
+                <td><a asp-controller="Order" asp-action="Delete" asp-route-id="@order.Id" class="btn btn-danger">Delete</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
